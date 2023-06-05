@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">CounterPro</string>
+
+    <string name="text_no_counters">No Counters Found!</string>
+    <string name="text_empty_state_counters">There are no counters here. \n Add a new one with the \"+\" button.</string>
+
+    <string name="dialog_add_counter_title">Assign a Title to the Counter</string>
+    <string name="dialog_add_counter_hint">Enter counter title</string>
+    <string name="dialog_add_counter_confirm">Create</string>
+    <string name="dialog_add_counter_cancel">Cancel</string>
+
+    <string name="description_btn_increment">Increment the counter.</string>
+    <string name="description_btn_decrement">Decrement the counter.</string>
+    <string name="description_counter_add">Create counter</string>
+
+    <string name="error_connectivity">Please check your internet connection and try again.</string>
+    <string name="error_empty_title">The counter title must not be empty.</string>
+    <string name="error_counter_not_created">Unable to create a new Counter, please check your internet connection and try again.</string>
+    <string name="error_counter_duplicated">A counter with the same title already exists, please choose another title.</string>
+    <string name="error_unknown">Unknown error occurred.</string>
+
+</resources>

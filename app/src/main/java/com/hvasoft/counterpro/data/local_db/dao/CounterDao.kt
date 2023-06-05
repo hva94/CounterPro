@@ -1,0 +1,21 @@
+package com.hvasoft.counterpro.data.local_db.dao
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.hvasoft.counterpro.data.local_db.entities.CounterEntity
+
+@Dao
+interface CounterDao {
+
+    @Query("SELECT * FROM counters")
+    suspend fun getCounters(): List<CounterEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCounter(counter: CounterEntity)
+
+    @Query("SELECT * FROM counters WHERE title = :title")
+    suspend fun getCounterByTitle(title: String): CounterEntity?
+
+}

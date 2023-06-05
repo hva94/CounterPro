@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="item_card_width">160dp</dimen>
+    <dimen name="item_card_height">160dp</dimen>
+
+    <dimen name="common_padding_none">0dp</dimen>
+    <dimen name="common_padding_micro">4dp</dimen>
+    <dimen name="common_padding_min">8dp</dimen>
+    <dimen name="common_padding_default">16dp</dimen>
+
+    <dimen name="dimen_12">12dp</dimen>
+    <dimen name="dimen_250">250dp</dimen>
+    <dimen name="dimen_280">280dp</dimen>
+</resources>

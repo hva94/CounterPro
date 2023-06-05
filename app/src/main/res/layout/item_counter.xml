@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/item_card_width"
+    android:layout_height="@dimen/item_card_height"
+    android:layout_marginStart="@dimen/common_padding_default"
+    android:layout_marginTop="@dimen/common_padding_default">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorSurface">
+
+        <TextView
+            android:id="@+id/tvCounterValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="@dimen/common_padding_min"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceHeadline3"
+            android:textColor="?android:textColorPrimary"
+            app:layout_constraintBottom_toTopOf="@id/tvCounterTitle"
+            app:layout_constraintEnd_toStartOf="@id/btnIncrementCounter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/tvCounterTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="@dimen/common_padding_min"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:textColorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Counter's Title" />
+
+        <ImageButton
+            android:id="@+id/btnIncrementCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/common_padding_default"
+            android:layout_marginEnd="@dimen/common_padding_micro"
+            android:background="@drawable/rounded_background"
+            android:contentDescription="@string/description_btn_increment"
+            android:src="@drawable/ic_add_circle_outline"
+            app:layout_constraintBottom_toTopOf="@id/btnDecrementCounter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnDecrementCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_padding_default"
+            android:layout_marginEnd="@dimen/common_padding_micro"
+            android:layout_marginBottom="@dimen/common_padding_min"
+            android:background="@drawable/rounded_background"
+            android:contentDescription="@string/description_btn_decrement"
+            android:src="@drawable/ic_remove_circle_outline"
+            app:layout_constraintBottom_toTopOf="@id/tvCounterTitle"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
