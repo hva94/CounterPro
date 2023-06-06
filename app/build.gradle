@@ -38,7 +38,7 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    // View Binding added
+    // Features added
     buildFeatures {
         viewBinding true
         buildConfig true

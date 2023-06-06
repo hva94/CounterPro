@@ -34,10 +34,11 @@ class CounterRemoteRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun insertCounter(title: String): Result<List<Counter>>  {
+    override suspend fun insertCounter(title: String): Result<List<Counter>> {
         val jsonObject = JsonObject()
         jsonObject.addProperty(PROPERTY_TITLE_REQUEST_BODY, title)
-        val requestBody = jsonObject.toString().toRequestBody(TYPE_MEDIA_REQUEST_BODY.toMediaTypeOrNull())
+        val requestBody =
+            jsonObject.toString().toRequestBody(TYPE_MEDIA_REQUEST_BODY.toMediaTypeOrNull())
         val response = makeSafeRequest { counterApi.insertCounter(requestBody) }
         return response.fold(
             onSuccess = { counters ->
@@ -55,7 +56,8 @@ class CounterRemoteRepositoryImpl @Inject constructor(
     override suspend fun incrementCounter(counter: Counter): Result<List<Counter>> {
         val jsonObject = JsonObject()
         jsonObject.addProperty(PROPERTY_ID_REQUEST_BODY, counter.id)
-        val requestBody = jsonObject.toString().toRequestBody(TYPE_MEDIA_REQUEST_BODY.toMediaTypeOrNull())
+        val requestBody =
+            jsonObject.toString().toRequestBody(TYPE_MEDIA_REQUEST_BODY.toMediaTypeOrNull())
         val response = makeSafeRequest { counterApi.incrementCounter(requestBody) }
         return response.fold(
             onSuccess = { counters ->
@@ -73,8 +75,28 @@ class CounterRemoteRepositoryImpl @Inject constructor(
     override suspend fun decrementCounter(counter: Counter): Result<List<Counter>> {
         val jsonObject = JsonObject()
         jsonObject.addProperty(PROPERTY_ID_REQUEST_BODY, counter.id)
-        val requestBody = jsonObject.toString().toRequestBody(TYPE_MEDIA_REQUEST_BODY.toMediaTypeOrNull())
+        val requestBody =
+            jsonObject.toString().toRequestBody(TYPE_MEDIA_REQUEST_BODY.toMediaTypeOrNull())
         val response = makeSafeRequest { counterApi.decrementCounter(requestBody) }
+        return response.fold(
+            onSuccess = { counters ->
+                Result.Success(counters.map { counter -> counter.toDomain() })
+            },
+            onError = { code ->
+                Result.Error(code)
+            },
+            onException = {
+                Result.Exception(it)
+            }
+        )
+    }
+
+    override suspend fun deleteCounter(counter: Counter): Result<List<Counter>> {
+        val jsonObject = JsonObject()
+        jsonObject.addProperty(PROPERTY_ID_REQUEST_BODY, counter.id)
+        val requestBody =
+            jsonObject.toString().toRequestBody(TYPE_MEDIA_REQUEST_BODY.toMediaTypeOrNull())
+        val response = makeSafeRequest { counterApi.deleteCounter(requestBody) }
         return response.fold(
             onSuccess = { counters ->
                 Result.Success(counters.map { counter -> counter.toDomain() })

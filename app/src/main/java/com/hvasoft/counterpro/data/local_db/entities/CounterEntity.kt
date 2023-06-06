@@ -15,11 +15,13 @@ data class CounterEntity(
     @PrimaryKey(autoGenerate = false)
     val id: String,
     val title: String,
-    val count: Int
+    val count: Int,
+    val isDeleted: Boolean = false
 ) {
     fun toDomain() = Counter(
         id = id,
         title = title,
-        count = count
+        count = count,
+        isDeleted = isDeleted
     )
 }

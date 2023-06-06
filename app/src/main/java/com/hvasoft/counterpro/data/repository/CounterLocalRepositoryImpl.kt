@@ -22,4 +22,8 @@ class CounterLocalRepositoryImpl @Inject constructor(
         counterDao.insertCounter(counter.toEntity())
     }
 
+    override suspend fun deleteCounter(counter: Counter) {
+        counterDao.deleteCounter(counter.toEntity())
+    }
+
 }

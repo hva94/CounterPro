@@ -4,5 +4,6 @@ data class CounterUseCases(
     val getCounters: GetCountersUC,
     val createCounter: CreateCounterUC,
     val incrementCounter: IncrementCounterUC,
-    val decrementCounter: DecrementCounterUC
+    val decrementCounter: DecrementCounterUC,
+    val deleteCounters: DeleteCountersUC
 )

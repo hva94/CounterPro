@@ -13,5 +13,6 @@ fun CounterDTO.toDomain(): Counter = Counter(
 fun Counter.toEntity(): CounterEntity = CounterEntity(
         id = id,
         title = title,
-        count = count
+        count = count,
+        isDeleted = isDeleted
     )

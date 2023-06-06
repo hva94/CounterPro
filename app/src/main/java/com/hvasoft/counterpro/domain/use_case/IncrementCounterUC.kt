@@ -11,7 +11,7 @@ import kotlin.math.abs
 
 class IncrementCounterUC @Inject constructor(
     private val localRepo: CounterLocalRepository,
-    private val remoteRepo: CounterRemoteRepository,
+    private val remoteRepo: CounterRemoteRepository
 ) {
     suspend operator fun invoke(counter: Counter): Result<List<Counter>> {
         counter.count++
@@ -26,19 +26,22 @@ class IncrementCounterUC @Inject constructor(
             remoteRepo.getCounters().getSuccess()?.forEach { remoteCounter ->
                 val localCounter = localCounters.find { it.title == remoteCounter.title }
                 if (localCounter != null) {
-                    val diffLocalRemoteCounter = remoteCounter.count - localCounter.count
-                    if (diffLocalRemoteCounter < 0) {
-                        repeat(abs(diffLocalRemoteCounter)) {
+                    val diffRemoteLocalCounter = remoteCounter.count - localCounter.count
+                    if (diffRemoteLocalCounter < 0) {
+                        repeat(abs(diffRemoteLocalCounter)) {
                             remoteRepo.incrementCounter(localCounter)
                         }
-                    } else if (diffLocalRemoteCounter > 0) {
-                        repeat(diffLocalRemoteCounter) {
+                    } else if (diffRemoteLocalCounter > 0) {
+                        repeat(diffRemoteLocalCounter) {
                             remoteRepo.decrementCounter(localCounter)
                         }
                     }
+                } else {
+                    val deleteRemoteCounter = remoteRepo.deleteCounter(remoteCounter).getSuccess()
+                    if (deleteRemoteCounter != null)
+                        localRepo.deleteCounter(remoteCounter)
                 }
             }
-            
             Result.Success(localCounters)
         } catch (e: SQLiteConstraintException) {
             Result.Exception(e)

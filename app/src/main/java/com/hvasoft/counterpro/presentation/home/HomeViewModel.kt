@@ -2,6 +2,7 @@ package com.hvasoft.counterpro.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hvasoft.counterpro.core.common.Result
 import com.hvasoft.counterpro.core.common.fold
 import com.hvasoft.counterpro.core.common.toError
 import com.hvasoft.counterpro.core.common.validateErrorCode
@@ -33,67 +34,41 @@ class HomeViewModel @Inject constructor(
     private fun getCounters() {
         _countersState.value = HomeState.Loading
         viewModelScope.launch(dispatcher) {
-            useCases.getCounters().fold(
-                onSuccess = { counters ->
-                    if (counters.isEmpty()) _countersState.value = HomeState.Empty
-                    else _countersState.update { HomeState.Success(counters) }
-                },
-                onError = { code ->
-                    val error = handleError(code.validateErrorCode())
-                    _countersState.update { HomeState.Failure(error) }
-                },
-                onException = {
-                    val error = handleError(it.toError())
-                    _countersState.update { HomeState.Failure(error) }
-                }
-            )
+            handleUseCaseResult(useCases.getCounters())
         }
     }
 
     fun createCounter(title: String) {
         _countersState.value = HomeState.Loading
         viewModelScope.launch(dispatcher) {
-            useCases.createCounter(title).fold(
-                onSuccess = { counters ->
-                    if (counters.isEmpty()) _countersState.value = HomeState.Empty
-                    else _countersState.update { HomeState.Success(counters) }
-                },
-                onError = { code ->
-                    val error = handleError(code.validateErrorCode())
-                    _countersState.update { HomeState.Failure(error) }
-                },
-                onException = {
-                    val error = handleError(it.toError())
-                    _countersState.update { HomeState.Failure(error) }
-                }
-            )
+            handleUseCaseResult(useCases.createCounter(title))
         }
     }
 
     fun incrementCounter(counter: Counter) {
         _countersState.value = HomeState.Loading
         viewModelScope.launch(dispatcher) {
-            useCases.incrementCounter(counter).fold(
-                onSuccess = { counters ->
-                    if (counters.isEmpty()) _countersState.value = HomeState.Empty
-                    else _countersState.update { HomeState.Success(counters) }
-                },
-                onError = { code ->
-                    val error = handleError(code.validateErrorCode())
-                    _countersState.update { HomeState.Failure(error) }
-                },
-                onException = {
-                    val error = handleError(it.toError())
-                    _countersState.update { HomeState.Failure(error) }
-                }
-            )
+            handleUseCaseResult(useCases.incrementCounter(counter))
         }
     }
 
     fun decrementCounter(counter: Counter) {
         _countersState.value = HomeState.Loading
         viewModelScope.launch(dispatcher) {
-            useCases.decrementCounter(counter).fold(
+            handleUseCaseResult(useCases.decrementCounter(counter))
+        }
+    }
+
+    fun deleteCounters(counters: List<Counter>) {
+        _countersState.value = HomeState.Loading
+        viewModelScope.launch(dispatcher) {
+            handleUseCaseResult(useCases.deleteCounters(counters))
+        }
+    }
+
+    private fun handleUseCaseResult(result: Result<List<Counter>>) {
+        try {
+            result.fold(
                 onSuccess = { counters ->
                     if (counters.isEmpty()) _countersState.value = HomeState.Empty
                     else _countersState.update { HomeState.Success(counters) }
@@ -107,7 +82,9 @@ class HomeViewModel @Inject constructor(
                     _countersState.update { HomeState.Failure(error) }
                 }
             )
+        } catch (e: Exception) {
+            val error = handleError(e.toError())
+            _countersState.update { HomeState.Failure(error) }
         }
     }
-
 }

@@ -1,7 +1,5 @@
 package com.hvasoft.counterpro.data.remote_db.response
 
-import com.hvasoft.counterpro.data.local_db.entities.CounterEntity
-import com.hvasoft.counterpro.domain.model.Counter
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

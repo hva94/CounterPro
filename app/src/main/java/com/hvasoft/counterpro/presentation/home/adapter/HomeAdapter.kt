@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +30,8 @@ class HomeAdapter(private val listener: OnClickListener) :
             setListener(counter)
             binding.tvCounterTitle.text = counter.title
             binding.tvCounterValue.text = counter.count.toString()
+            binding.viewSelectedBackground.visibility =
+                if (counter.isSelected) View.VISIBLE else View.GONE
         }
     }
 
@@ -36,13 +40,30 @@ class HomeAdapter(private val listener: OnClickListener) :
         fun setListener(counter: Counter) {
             with(binding) {
                 btnIncrementCounter.setOnClickListener {
+                    disableActionMode()
                     listener.onIncrementClick(counter)
                 }
                 btnDecrementCounter.setOnClickListener {
+                    disableActionMode()
                     listener.onDecrementClick(counter)
                 }
+                root.setOnClickListener {
+                    if (isActionModeEnabled.value == true) {
+                        currentList[layoutPosition].isSelected =
+                            !currentList[layoutPosition].isSelected
+                        if (currentList.none { it.isSelected }) {
+                            _isActionModeEnabled.value = false
+                        }
+                        notifyItemChanged(layoutPosition)
+                    }
+                }
                 root.setOnLongClickListener {
-                    listener.onLongClick(counter)
+                    if (isActionModeEnabled.value == false) {
+                        _isActionModeEnabled.value = true
+                        currentList[layoutPosition].isSelected =
+                            !currentList[layoutPosition].isSelected
+                        notifyItemChanged(layoutPosition)
+                    }
                     true
                 }
             }
@@ -53,9 +74,19 @@ class HomeAdapter(private val listener: OnClickListener) :
         override fun areItemsTheSame(oldItem: Counter, newItem: Counter): Boolean {
             return oldItem.id == newItem.id
         }
+
         override fun areContentsTheSame(oldItem: Counter, newItem: Counter): Boolean {
             return oldItem == newItem
         }
-
     }
+
+    private val _isActionModeEnabled = MutableLiveData(false)
+    val isActionModeEnabled: LiveData<Boolean> = _isActionModeEnabled
+
+    fun disableActionMode() {
+        _isActionModeEnabled.value = false
+        currentList.onEach { it.isSelected = false }
+        notifyItemRangeChanged(0, currentList.size)
+    }
+
 }

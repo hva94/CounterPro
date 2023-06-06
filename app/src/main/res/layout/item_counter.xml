@@ -12,6 +12,17 @@
         android:layout_height="match_parent"
         android:background="?attr/colorSurface">
 
+        <View
+            android:id="@+id/viewSelectedBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/design_default_color_primary"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
         <TextView
             android:id="@+id/tvCounterValue"
             android:layout_width="0dp"
@@ -20,7 +31,7 @@
             android:maxLines="1"
             android:padding="@dimen/common_padding_min"
             android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceHeadline3"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
             android:textColor="?android:textColorPrimary"
             app:layout_constraintBottom_toTopOf="@id/tvCounterTitle"
             app:layout_constraintEnd_toStartOf="@id/btnIncrementCounter"
@@ -35,7 +46,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="@dimen/common_padding_min"
-            android:textAppearance="?attr/textAppearanceBody2"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textColor="?android:textColorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

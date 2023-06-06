@@ -2,9 +2,14 @@ package com.hvasoft.counterpro.presentation.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -55,6 +60,11 @@ class HomeFragment : Fragment(), OnClickListener {
             layoutManager = gridLayoutManager
             adapter = homeAdapter
         }
+
+        homeAdapter.isActionModeEnabled.observe(viewLifecycleOwner) { isActionModeEnabled ->
+            if (isActionModeEnabled) setupToolbarMenu(true)
+            else setupToolbarMenu(false)
+        }
     }
 
     private fun setupViewModel() {
@@ -66,6 +76,7 @@ class HomeFragment : Fragment(), OnClickListener {
                             is HomeState.Loading -> progressBar.isVisible = true
 
                             is HomeState.Empty -> {
+                                homeAdapter.submitList(null)
                                 progressBar.isVisible = false
                                 emptyStateLayout.isVisible = true
                             }
@@ -102,21 +113,16 @@ class HomeFragment : Fragment(), OnClickListener {
             .setPositiveButton(R.string.dialog_add_counter_confirm) { _, _ ->
                 val counterTitle = inputField.text.toString().trim()
                 homeViewModel.createCounter(counterTitle)
+                homeAdapter.disableActionMode()
             }
-            .setNegativeButton(R.string.dialog_add_counter_cancel, null)
+            .setNegativeButton(R.string.dialog_counter_cancel, null)
             .show()
-
     }
 
-    private fun showErrorMessage(
-        messageRes: Int,
-        actionRes: Int = 0,
-        actionCallback: () -> Unit = {},
-    ) {
+    private fun showErrorMessage(messageRes: Int) {
         view?.let { rootView ->
-            val duration = if (actionRes != 0) Snackbar.LENGTH_INDEFINITE else Snackbar.LENGTH_LONG
-            val snackbar = Snackbar.make(rootView, messageRes, duration)
-            val params = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
+            val snackBar = Snackbar.make(rootView, messageRes, Snackbar.LENGTH_LONG)
+            val params = snackBar.view.layoutParams as ViewGroup.MarginLayoutParams
             val extraBottomMargin = resources.getDimensionPixelSize(R.dimen.common_padding_default)
             params.setMargins(
                 params.leftMargin,
@@ -124,12 +130,50 @@ class HomeFragment : Fragment(), OnClickListener {
                 params.rightMargin,
                 binding.floatingButton.height + params.bottomMargin + extraBottomMargin
             )
-            snackbar.view.layoutParams = params
-            if (actionRes != 0) {
-                snackbar.setAction(actionRes) { actionCallback.invoke() }
-            }
-            snackbar.show()
+            snackBar.view.layoutParams = params
+            snackBar.show()
         }
+    }
+
+    private fun setupToolbarMenu(isActionModeEnabled: Boolean) {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+
+            override fun onPrepareMenu(menu: Menu) {
+                val btnDeselect = menu.findItem(R.id.btnDeselect)
+                if (btnDeselect != null) btnDeselect.isVisible = isActionModeEnabled
+                val btnDelete = menu.findItem(R.id.btnDelete)
+                if (btnDelete != null) btnDelete.isVisible = isActionModeEnabled
+            }
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                if (!menu.hasVisibleItems()) menuInflater.inflate(R.menu.counter_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.btnDeselect -> {
+                        homeAdapter.disableActionMode()
+                    }
+                    R.id.btnDelete -> {
+                        val selectedCounters = homeAdapter.currentList.filter { it.isSelected }
+                        confirmDelete(selectedCounters)
+                    }
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun confirmDelete(counters: List<Counter>) {
+        val context = context ?: return
+        MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.dialog_delete_counter_title)
+            .setPositiveButton(R.string.text_btn_delete) { _, _ ->
+                homeViewModel.deleteCounters(counters)
+                homeAdapter.disableActionMode()
+            }
+            .setNegativeButton(R.string.dialog_counter_cancel, null)
+            .show()
     }
 
     override fun onDestroyView() {
@@ -146,9 +190,5 @@ class HomeFragment : Fragment(), OnClickListener {
 
     override fun onDecrementClick(counter: Counter) {
         homeViewModel.decrementCounter(counter)
-    }
-
-    override fun onLongClick(counter: Counter) {
-        TODO("Not yet implemented")
     }
 }

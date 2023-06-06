@@ -9,11 +9,19 @@ import com.hvasoft.counterpro.domain.repository.CounterRemoteRepository
 import javax.inject.Inject
 import kotlin.math.abs
 
-class GetCountersUC @Inject constructor(
+class DeleteCountersUC @Inject constructor(
     private val localRepo: CounterLocalRepository,
     private val remoteRepo: CounterRemoteRepository
 ) {
-    suspend operator fun invoke(): Result<List<Counter>> {
+    suspend operator fun invoke(counters: List<Counter>): Result<List<Counter>> {
+        try {
+            counters.forEach { counter ->
+                counter.isDeleted = true
+                localRepo.insertCounter(counter)
+            }
+        } catch (e: SQLiteConstraintException) {
+            return Result.Exception(e)
+        }
         return try {
             val localCounters = localRepo.getCounters()
             remoteRepo.getCounters().getSuccess()?.forEach { remoteCounter ->
@@ -30,8 +38,8 @@ class GetCountersUC @Inject constructor(
                         }
                     }
                 } else {
-                    val deleteRemoteCounter = remoteRepo.deleteCounter(remoteCounter).getSuccess()
-                    if (deleteRemoteCounter != null)
+                    val remoteCounterDeleted = remoteRepo.deleteCounter(remoteCounter).getSuccess()
+                    if (remoteCounterDeleted != null)
                         localRepo.deleteCounter(remoteCounter)
                 }
             }
@@ -40,5 +48,4 @@ class GetCountersUC @Inject constructor(
             Result.Exception(e)
         }
     }
-
 }

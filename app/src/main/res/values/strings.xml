@@ -3,15 +3,18 @@
 
     <string name="text_no_counters">No Counters Found!</string>
     <string name="text_empty_state_counters">There are no counters here. \n Add a new one with the \"+\" button.</string>
+    <string name="text_btn_delete">Delete</string>
+    <string name="text_btn_deselect">Deselect</string>
 
     <string name="dialog_add_counter_title">Assign a Title to the Counter</string>
     <string name="dialog_add_counter_hint">Enter counter title</string>
     <string name="dialog_add_counter_confirm">Create</string>
-    <string name="dialog_add_counter_cancel">Cancel</string>
+    <string name="dialog_delete_counter_title">Are you sure you want to delete this item(s)?</string>
+    <string name="dialog_counter_cancel">Cancel</string>
 
     <string name="description_btn_increment">Increment the counter.</string>
     <string name="description_btn_decrement">Decrement the counter.</string>
-    <string name="description_counter_add">Create counter</string>
+    <string name="description_fab_btn_add">Create counter</string>
 
     <string name="error_connectivity">Please check your internet connection and try again.</string>
     <string name="error_empty_title">The counter title must not be empty.</string>

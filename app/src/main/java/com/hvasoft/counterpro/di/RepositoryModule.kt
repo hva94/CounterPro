@@ -9,6 +9,7 @@ import com.hvasoft.counterpro.domain.repository.CounterRemoteRepository
 import com.hvasoft.counterpro.domain.use_case.CounterUseCases
 import com.hvasoft.counterpro.domain.use_case.CreateCounterUC
 import com.hvasoft.counterpro.domain.use_case.DecrementCounterUC
+import com.hvasoft.counterpro.domain.use_case.DeleteCountersUC
 import com.hvasoft.counterpro.domain.use_case.GetCountersUC
 import com.hvasoft.counterpro.domain.use_case.IncrementCounterUC
 import dagger.Module
@@ -48,7 +49,8 @@ object RepositoryModule {
         getCounters = GetCountersUC(localRepository, remoteRepository),
         createCounter = CreateCounterUC(localRepository, remoteRepository),
         incrementCounter = IncrementCounterUC(localRepository, remoteRepository),
-        decrementCounter = DecrementCounterUC(localRepository, remoteRepository)
+        decrementCounter = DecrementCounterUC(localRepository, remoteRepository),
+        deleteCounters = DeleteCountersUC(localRepository, remoteRepository)
     )
 
 }

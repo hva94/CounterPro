@@ -4,9 +4,10 @@ object DataConstants {
 
     private const val BASE_PATH = "api/v1/"
     const val GET_COUNTERS_PATH = "${BASE_PATH}counters"
-    const val INSERT_COUNTER_PATH = "${BASE_PATH}counter"
-    const val INCREMENT_COUNTER_PATH = "${INSERT_COUNTER_PATH}/inc"
-    const val DECREMENT_COUNTER_PATH = "${INSERT_COUNTER_PATH}/dec"
+    const val BASE_COUNTER_PATH = "${BASE_PATH}counter"
+    const val INCREMENT_COUNTER_PATH = "${BASE_COUNTER_PATH}/inc"
+    const val DECREMENT_COUNTER_PATH = "${BASE_COUNTER_PATH}/dec"
+    const val DELETE_METHOD_NAME = "DELETE"
     const val CONTENT_TYPE_HEADER = "Content-Type: application/json"
     const val TYPE_MEDIA_REQUEST_BODY = "application/json"
     const val PROPERTY_TITLE_REQUEST_BODY = "title"
