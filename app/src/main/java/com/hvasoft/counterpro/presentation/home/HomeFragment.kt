@@ -47,6 +47,16 @@ class HomeFragment : Fragment(), OnClickListener {
         binding.floatingButton.setOnClickListener { createCounter() }
     }
 
+    private fun setupRecyclerView() {
+        homeAdapter = HomeAdapter(this)
+        val gridLayoutManager =
+            GridLayoutManager(context, resources.getInteger(R.integer.main_columns))
+        binding.recyclerView.apply {
+            layoutManager = gridLayoutManager
+            adapter = homeAdapter
+        }
+    }
+
     private fun setupViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -63,6 +73,7 @@ class HomeFragment : Fragment(), OnClickListener {
                             is HomeState.Success -> {
                                 progressBar.isVisible = false
                                 emptyStateLayout.isVisible = false
+                                homeAdapter.submitList(null)
                                 homeAdapter.submitList(homeState.counters)
                             }
 
@@ -77,17 +88,6 @@ class HomeFragment : Fragment(), OnClickListener {
                     }
                 }
             }
-        }
-    }
-
-    private fun setupRecyclerView() {
-        homeAdapter = HomeAdapter(this)
-        val gridLayoutManager =
-            GridLayoutManager(context, resources.getInteger(R.integer.main_columns))
-        binding.recyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = gridLayoutManager
-            adapter = homeAdapter
         }
     }
 
@@ -141,11 +141,11 @@ class HomeFragment : Fragment(), OnClickListener {
      * OnClickListener
      */
     override fun onIncrementClick(counter: Counter) {
-        TODO("Not yet implemented")
+        homeViewModel.incrementCounter(counter)
     }
 
     override fun onDecrementClick(counter: Counter) {
-        TODO("Not yet implemented")
+        homeViewModel.decrementCounter(counter)
     }
 
     override fun onLongClick(counter: Counter) {

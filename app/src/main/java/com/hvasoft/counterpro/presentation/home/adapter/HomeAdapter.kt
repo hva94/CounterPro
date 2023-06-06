@@ -50,11 +50,9 @@ class HomeAdapter(private val listener: OnClickListener) :
     }
 
     class CounterDiffCallback : DiffUtil.ItemCallback<Counter>() {
-
         override fun areItemsTheSame(oldItem: Counter, newItem: Counter): Boolean {
             return oldItem.id == newItem.id
         }
-
         override fun areContentsTheSame(oldItem: Counter, newItem: Counter): Boolean {
             return oldItem == newItem
         }

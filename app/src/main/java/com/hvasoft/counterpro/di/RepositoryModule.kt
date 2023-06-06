@@ -2,11 +2,15 @@ package com.hvasoft.counterpro.di
 
 import com.hvasoft.counterpro.data.local_db.dao.CounterDao
 import com.hvasoft.counterpro.data.remote_db.service.CounterApi
-import com.hvasoft.counterpro.data.repository.CounterRepositoryImpl
-import com.hvasoft.counterpro.domain.repository.CounterRepository
+import com.hvasoft.counterpro.data.repository.CounterLocalRepositoryImpl
+import com.hvasoft.counterpro.data.repository.CounterRemoteRepositoryImpl
+import com.hvasoft.counterpro.domain.repository.CounterLocalRepository
+import com.hvasoft.counterpro.domain.repository.CounterRemoteRepository
 import com.hvasoft.counterpro.domain.use_case.CounterUseCases
 import com.hvasoft.counterpro.domain.use_case.CreateCounterUC
+import com.hvasoft.counterpro.domain.use_case.DecrementCounterUC
 import com.hvasoft.counterpro.domain.use_case.GetCountersUC
+import com.hvasoft.counterpro.domain.use_case.IncrementCounterUC
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,22 +23,32 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun providesCounterRepository(
-        counterApi: CounterApi,
+    fun providesCounterLocalRepository(
         counterDao: CounterDao
-    ): CounterRepository =
-        CounterRepositoryImpl(
-            counterApi,
+    ): CounterLocalRepository =
+        CounterLocalRepositoryImpl(
             counterDao
         )
 
     @Provides
     @Singleton
+    fun providesCounterRemoteRepository(
+        counterApi: CounterApi
+    ): CounterRemoteRepository =
+        CounterRemoteRepositoryImpl(
+            counterApi
+        )
+
+    @Provides
+    @Singleton
     fun providesCounterUseCases(
-        counterRepository: CounterRepository
+        localRepository: CounterLocalRepository,
+        remoteRepository: CounterRemoteRepository
     ): CounterUseCases = CounterUseCases(
-        getCounters = GetCountersUC(counterRepository),
-        createCounter = CreateCounterUC(counterRepository)
+        getCounters = GetCountersUC(localRepository, remoteRepository),
+        createCounter = CreateCounterUC(localRepository, remoteRepository),
+        incrementCounter = IncrementCounterUC(localRepository, remoteRepository),
+        decrementCounter = DecrementCounterUC(localRepository, remoteRepository)
     )
 
 }
