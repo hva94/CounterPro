@@ -1,4 +1,4 @@
-# 🍳 Android Development Challenge by hva94 - [linkedin.com/in/hva94](https://www.linkedin.com/in/hva94/)
+# Android Development Challenge by hva94 - [linkedin.com/in/hva94](https://www.linkedin.com/in/hva94/)
 
 ## CounterPro (Counter Management Android Application)
 
